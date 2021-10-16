@@ -1,4 +1,6 @@
-use nom::{IResult, number::complete::{le_u8, le_u16, le_u32, le_u64}, multi::count};
+use nom::{IResult, number::complete::{le_u8, le_u16, le_u32, le_u64}};
+
+use super::DataDirectories;
 
 #[derive(Debug)]
 pub enum OptionalHeader {
@@ -45,7 +47,7 @@ pub struct OptionalHeader32 {
     pub size_of_heap_commit: u32,
     pub loader_flags: u32,
     pub number_of_rva_and_sizes: u32,
-    pub data_directory: Vec<DataDirectory>,
+    pub data_directory: DataDirectories,
 }
 
 #[derive(Debug, Default)]
@@ -79,13 +81,7 @@ pub struct OptionalHeader64 {
     pub size_of_heap_commit: u64,
     pub loader_flags: u32,
     pub number_of_rva_and_sizes: u32,
-    pub data_directory: Vec<DataDirectory>,
-}
-
-#[derive(Debug)]
-pub struct DataDirectory {
-    virtual_address: u32,
-    size: u32,
+    pub data_directory: DataDirectories,
 }
 
 impl OptionalHeader32 {
@@ -119,7 +115,7 @@ impl OptionalHeader32 {
         let (i, size_of_heap_commit) = le_u32(i)?;
         let (i, loader_flags) = le_u32(i)?;
         let (i, number_of_rva_and_sizes) = le_u32(i)?;
-        let (i, data_directory) = count(DataDirectory::parse, number_of_rva_and_sizes as usize)(i)?;
+        let (i, data_directory) = DataDirectories::parse(i)?;
         
         Ok((i, OptionalHeader32 {
             magic: 0x010b,
@@ -187,7 +183,7 @@ impl OptionalHeader64 {
         let (i, size_of_heap_commit) = le_u64(i)?;
         let (i, loader_flags) = le_u32(i)?;
         let (i, number_of_rva_and_sizes) = le_u32(i)?;
-        let (i, data_directory) = count(DataDirectory::parse, number_of_rva_and_sizes as usize)(i)?;
+        let (i, data_directory) = DataDirectories::parse(i)?;
 
         Ok((i, OptionalHeader64 {
             magic: 0x020b,
@@ -220,18 +216,6 @@ impl OptionalHeader64 {
             loader_flags,
             number_of_rva_and_sizes,
             data_directory,
-        }))
-    }
-}
-
-impl DataDirectory {
-    pub fn parse(input: &[u8]) -> IResult<&[u8], DataDirectory> {
-        let (i, virtual_address) = le_u32(input)?;
-        let (i, size) = le_u32(i)?;
-
-        Ok((i, DataDirectory {
-            virtual_address,
-            size,
         }))
     }
 }
