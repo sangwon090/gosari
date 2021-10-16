@@ -3,8 +3,12 @@ use std::collections::HashMap;
 use nom::IResult;
 
 mod header;
+mod characteristic;
+mod subsystem;
 
 pub use header::*;
+pub use characteristic::DllCharacteristics;
+pub use subsystem::Subsystem;
 
 #[derive(Debug, Default)]
 pub struct PE {

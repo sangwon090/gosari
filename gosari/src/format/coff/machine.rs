@@ -1,5 +1,5 @@
 pub enum MachineType {
-    Unknown = 0x0000,
+    UNKNOWN = 0x0000,
     AM33 = 0x01D3,
     AMD64 = 0x8664,
     ARM = 0x01C0,
