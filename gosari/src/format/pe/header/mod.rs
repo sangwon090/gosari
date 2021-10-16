@@ -5,7 +5,7 @@ mod optional;
 mod pe;
 mod section;
 
-pub use data_directory::{DataDirectory, DataDirectories};
+pub use data_directory::DataDirectory;
 pub use dos::DOSHeader;
 pub use nt::NTHeader;
 pub use optional::{OptionalHeader, OptionalHeader32, OptionalHeader64};
