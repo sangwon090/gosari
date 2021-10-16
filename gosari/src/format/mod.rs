@@ -1,12 +1,12 @@
-mod elf;
-mod macho;
-mod pe;
+pub mod coff;
+pub mod elf;
+pub mod macho;
+pub mod pe;
 
+pub use coff::FileHeader;
 pub use elf::ELF;
 pub use macho::MachO;
 pub use pe::PE;
-
-use std::fs::File;
 
 #[derive(Debug)]
 pub enum Format {
@@ -16,17 +16,13 @@ pub enum Format {
     Unknown,
 }
 
-pub trait IFormat {
-    fn is_valid(file: &mut File) -> bool;
-}
-
 impl Format {
-    pub fn detect(file: &mut File) -> Format {
-        if ELF::is_valid(file) {
+    pub fn detect(input: &[u8]) -> Format {
+        if ELF::is_valid(input) {
             return Format::ELF;
-        } else if MachO::is_valid(file) {
+        } else if MachO::is_valid(input) {
             return Format::MachO;
-        } else if PE::is_valid(file) {
+        } else if PE::is_valid(input) {
             return Format::PE;
         } else {
             return Format::Unknown;

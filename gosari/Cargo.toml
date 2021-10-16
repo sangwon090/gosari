@@ -1,0 +1,9 @@
+[package]
+name = "gosari"
+version = "0.1.0"
+authors = ["Sangwon Ryu <bdboy090@naver.com>"]
+edition = "2018"
+
+[dependencies]
+bitflags = "1.3"
+nom = "7"

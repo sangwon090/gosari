@@ -1,8 +1,5 @@
-[package]
-name = "gosari"
-version = "0.1.0"
-authors = ["Sangwon Ryu <bdboy090@naver.com>"]
-edition = "2018"
+[workspace]
 
-[dependencies]
-nom = "7"
+members = [
+    "gosari",
+]
